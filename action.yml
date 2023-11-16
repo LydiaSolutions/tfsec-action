@@ -24,7 +24,10 @@ inputs:
       (eg. --force-all-dirs --verbose)
   soft_fail:
     required: false
-    description: If set to `true` the action step won't break the  build
+    description: If set to `true` the action step won't break the build
+  output_file:
+    required: false
+    description: file to write stdout to
   github_token:
     description: |
       GitHub token used for making authenticated requests to the GitHub API,

@@ -54,10 +54,14 @@ if [ -n "${INPUT_ADDITIONAL_ARGS}" ]; then
   TFSEC_ARGS_OPTION="${INPUT_ADDITIONAL_ARGS}"
 fi
 
-if [ -n "${INPUT_SOFT_FAIL}" ]; then 
+if [ -n "${INPUT_SOFT_FAIL}" ]; then
   SOFT_FAIL="--soft-fail"
+fi
+
+if [ -n "${INPUT_OUTPUT_FILE}" ]; then
+  OUTPUT_FILE="${INPUT_OUTPUT_FILE}"
 fi
 
 FORMAT=${INPUT_FORMAT:-default}
 
-tfsec --format="${FORMAT}" ${SOFT_FAIL} ${TFSEC_ARGS_OPTION} "${INPUT_WORKING_DIRECTORY}"
+tfsec --format="${FORMAT}" ${SOFT_FAIL} ${TFSEC_ARGS_OPTION} "${INPUT_WORKING_DIRECTORY}" | tee ${OUTPUT_FILE}
