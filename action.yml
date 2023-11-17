@@ -28,6 +28,9 @@ inputs:
   output_file:
     required: false
     description: file to write stdout to
+  custom_check_url:
+    required: false
+    description: URL to get the custom rules from
   github_token:
     description: |
       GitHub token used for making authenticated requests to the GitHub API,
