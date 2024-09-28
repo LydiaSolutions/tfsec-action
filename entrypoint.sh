@@ -66,6 +66,10 @@ if [ -n "${INPUT_CUSTOM_CHECK_URL}" ]; then
   CUSTOM_CHECK_URL="--custom-check-url ${INPUT_CUSTOM_CHECK_URL}"
 fi
 
+if [ -n "${INPUT_TFVARS_FILE}" ]; then
+  TFVARS_FILE="--tfvars-file ${INPUT_TFVARS_FILE}"
+fi
+
 FORMAT=${INPUT_FORMAT:-default}
 
-tfsec --format="${FORMAT}" ${SOFT_FAIL} ${CUSTOM_CHECK_URL} ${TFSEC_ARGS_OPTION} "${INPUT_WORKING_DIRECTORY}" | tee ${OUTPUT_FILE}
+tfsec --format="${FORMAT}" ${SOFT_FAIL} ${CUSTOM_CHECK_URL} ${TFVARS_FILE} ${TFSEC_ARGS_OPTION} "${INPUT_WORKING_DIRECTORY}" | tee ${OUTPUT_FILE}

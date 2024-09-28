@@ -31,6 +31,9 @@ inputs:
   custom_check_url:
     required: false
     description: URL to get the custom rules from
+  tfvars_file:
+    required: false
+    description: name of the tfvars file
   github_token:
     description: |
       GitHub token used for making authenticated requests to the GitHub API,
