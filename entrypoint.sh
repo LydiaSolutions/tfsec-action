@@ -2,6 +2,9 @@
 
 set -xe
 
+# Temporarily skipped since aquasecurity set up low rate limits
+exit 0
+
 if [ -z "${INPUT_GITHUB_TOKEN}" ] ; then
   echo "::notice title=GitHub API token::Consider setting a GITHUB_TOKEN to prevent GitHub api rate limits"
 fi
