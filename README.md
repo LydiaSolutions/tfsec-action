@@ -3,81 +3,31 @@
 </p>
 
 # tfsec-action
-Run tfsec as a GitHub action with configurable output
 
-To add the action, add `tfsec.yml` into the `.github/workflows` directory in the root of your Github project.
+This repository packages tfsec as a Docker-based GitHub Action for checking Terraform configuration for security issues. It provides workflow inputs for choosing scan scope, supplying custom checks and variable values, and controlling reporting.
 
-The contents of `tfsec.yml` should be;
+**Scanning is currently disabled.** The action exits successfully before downloading or running tfsec, with a comment attributing the temporary bypass to upstream rate limits. A successful workflow step therefore does not establish that Terraform was checked. Configuration inputs have no effect while this bypass remains in place.
 
-```yaml
-name: tfsec
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-jobs:
-  tfsec:
-    name: tfsec
-    runs-on: ubuntu-latest
+## Using the action
 
-    steps:
-      - name: Clone repo
-        uses: actions/checkout@master
-      - name: tfsec
-        uses: aquasecurity/tfsec-action@v1.0.0
-```
+You need a GitHub Actions workflow, Terraform configuration checked out into its workspace, and a Linux runner capable of running Docker actions. Add a checkout step before referencing `LydiaSolutions/tfsec-action` at a reviewed revision. Before relying on it as a security check, confirm that the selected revision actually runs the scanner and inspect the scan output; the revision documented here does not.
 
-Run tfsec as part of a GitHub Action flow. Optionally prevent the failure of tfsec from breaking the build or pass additional arguments using `additional_args`.
+Earlier examples used `aquasecurity/tfsec-action`, which references the upstream action rather than this repository. Choose the repository intentionally when configuring your workflow.
 
-## Optional inputs
+## Configuration and components
 
-There are a number of optional inputs that can be used in the `with:` block.
+The [action interface](action.yml) describes the available inputs and declares a scanner return-code output. Scan configuration includes the target directory, scanner release, output format, additional arguments, custom-check URL, and Terraform variable file. Reporting options include writing standard output to a file and requesting soft failure so findings need not stop a build. A GitHub token can authenticate release API requests to help avoid rate limiting.
 
-**working_directory** - the directory to scan in, defaults to `.`, ie current working directory
+The [execution logic](entrypoint.sh) contains release downloads, checksum verification, scanner installation, and the scan invocation, all currently bypassed. The [container definition](Dockerfile) supplies the shell and supporting download tools. When enabled, execution requires network access to GitHub release APIs and assets.
 
-**version** - the version of tfsec to use, defaults to `latest`
-
-**format** - Default format can be overridden to any of the following - [json,csv,checkstyle,junit,sarif]
-
-**additional_args** - any additional arguments you want to have passed to tfsec
-
-**soft_fail** - set to `true` if you dont want the action to break the build
-
-**github_token** - a GitHub token to be used when calling the GitHub API, which helps in avoiding rate-limiting
-
-### tfsec_vars
-
-`tfsec` provides an [extensive number of arguments](https://aquasecurity.github.io/tfsec/v0.63.1/getting-started/usage/) which can be passed through as in the example below;
-
-```yaml
-name: tfsec
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-jobs:
-  tfsec:
-    name: tfsec
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Clone repo
-        uses: actions/checkout@master
-      - name: tfsec
-        uses: aquasecurity/tfsec-action@v1.0.0
-        with:
-          soft_fail: true
-
-```
+The existing documentation lists JSON, CSV, Checkstyle, JUnit, and SARIF output formats. Consult the [tfsec argument reference](https://aquasecurity.github.io/tfsec/v0.63.1/getting-started/usage/) for additional scan options; support depends on the selected scanner release. The declared return-code output is not populated by the current execution logic.
 
 ## Open Source Attribution
 
 - bash: [GPL 3.0 or later](https://www.gnu.org/licenses/gpl-3.0.html)
 - curl: [curl license](https://curl.se/docs/copyright.html)
 - git: [GPL 2.0 or later](https://github.com/git/git/blob/master/COPYING)
-- jq: [MIT](https://github.com/stedolan/jq/blob/master/COPYING) 
+- jq: [MIT](https://github.com/stedolan/jq/blob/master/COPYING)
 
 ## License
 
